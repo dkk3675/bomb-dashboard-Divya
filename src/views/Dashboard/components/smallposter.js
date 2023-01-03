@@ -17,6 +17,8 @@ import useWithdrawCheck from '../../../hooks/boardroom/useWithdrawCheck';
 
 import Bomb from '../assets/bomb.png';
 import BShares from '../assets/bshares.png';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowCircleUp,faArrowCircleDown } from '@fortawesome/free-solid-svg-icons';
 import Details from './details';
 
 const SmallPoster = ({ bsharePrice }) => {
@@ -76,8 +78,8 @@ const SmallPoster = ({ bsharePrice }) => {
                 <div className="flex flex-wrap w-3/6 justify-end items-end mb-5">
                   <p className='inline-flex'>Total Staked: <img src={ BShares } alt="" className='h-5 w-5' />{totalStake}</p>
                   <div className="inline-flex">
-                    <button disabled={approveStatus !== ApprovalState.NOT_APPROVED} onClick={approve}className={`border-2 border-white rounded-full h-10 w-28 pt-1 pb-1 ml-2 ${approveStatus === ApprovalState.NOT_APPROVED ? 'border-white text-white' : 'border-[#C3C5CBBF] text-[#C3C5CBBF]'}`}>Deposit</button>
-                    <button disabled={stakedBalance.eq(0) || (!canWithdraw && !canClaimReward)} onClick={onRedeem} className={`border-2 border-white rounded-full h-10 w-28 pt-1 pb-1 ml-2 ${stakedBalance.eq(0) || (!canWithdraw && !canClaimReward) ? 'border-[#C3C5CBBF] text-[#C3C5CBBF]' : 'border-white text-white'}`}>Withdraw</button>
+                    <button disabled={approveStatus !== ApprovalState.NOT_APPROVED} onClick={approve}className={`border-2 border-white rounded-full h-10 w-28 pt-1 pb-1 ml-2 ${approveStatus === ApprovalState.NOT_APPROVED ? 'border-white text-white' : 'border-[#C3C5CBBF] text-[#C3C5CBBF]'}`}>Deposit&nbsp;&nbsp;&nbsp;<FontAwesomeIcon icon={faArrowCircleUp} /></button>
+                    <button disabled={stakedBalance.eq(0) || (!canWithdraw && !canClaimReward)} onClick={onRedeem} className={`border-2 border-white rounded-full h-10 w-28 pt-1 pb-1 ml-2 ${stakedBalance.eq(0) || (!canWithdraw && !canClaimReward) ? 'border-[#C3C5CBBF] text-[#C3C5CBBF]' : 'border-white text-white'}`}>Withdraw&nbsp;&nbsp;&nbsp;<FontAwesomeIcon icon={faArrowCircleDown} /></button>
                   </div>
                     <button onClick={onReward} disabled={earnings.eq(0) || !canClaimReward} className={`border-2 border-white rounded-full h-10 w-[14.5rem] pt-1 pb-1 ${earnings.eq(0) || !canClaimReward ? 'border-[#C3C5CBBF] text-[#C3C5CBBF]' : 'border-white text-white'}`}><span className='inline-flex'>Claim Rewards&nbsp;<img src={ BShares } alt="" className='h-6 w-6 p-1 bg-gray-700 rounded-full' /></span></button>
                 </div>
