@@ -2,8 +2,6 @@ import React, { useMemo } from 'react';
 import useBondStats from '../../hooks/useBondStats';
 import usebShareStats from '../../hooks/usebShareStats';
 import useBombStats from '../../hooks/useBombStats';
-import useLpStats from '../../hooks/useLpStats';
-import useLpStatsBTC from '../../hooks/useLpStatsBTC';
 
 import useCurrentEpoch from '../../hooks/useCurrentEpoch';
 import moment from 'moment';
@@ -13,18 +11,15 @@ import useCashPriceInEstimatedTWAP from '../../hooks/useCashPriceInEstimatedTWAP
 import CountUp from 'react-countup';
 import useTotalValueLocked from '../../hooks/useTotalValueLocked';
 import useCashPriceInLastTWAP from '../../hooks/useCashPriceInLastTWAP';
-import useStakedBalance from '../../hooks/useStakedBalance';
 
 import useBanks from '../../hooks/useBanks';
-import useBank from '../../hooks/useBank';
-import useStatsForPool from '../../hooks/useStatsForPool';
 
 import {getDisplayBalance} from '../../utils/formatBalance';
 import useBombFinance from '../../hooks/useBombFinance';
 import useTokenBalance from '../../hooks/useTokenBalance';
-import useEarnings from '../../hooks/useEarnings';
-import useShareStats from '../../hooks/usebShareStats';
 
+import useCatchError from '../../hooks/useCatchError';
+import useApprove, {ApprovalState} from '../../hooks/useApprove';
 
 import './Dashboard.css';
 import Bomb from './assets/bomb.png';
@@ -34,7 +29,6 @@ import BombBitcoin from './assets/bomb-bitcoin.png';
 import BombbnbLP from './assets/bomb-bnb-lp.png';
 import Discord from './assets/discord.png';
 import Docs from './assets/docs.png';
-import BigPoster from './components/bigposter';
 import SmallPoster from './components/smallposter';
 import One from './assets/Vector 90 - Vector 91 - 818.svg';
 import Two from './assets/Vector 90 - Vector 91 - 909.svg';
@@ -93,41 +87,52 @@ const Dashboard = () => {
   const currentEpoch = useCurrentEpoch();
   const { to } = useTreasuryAllocationTimes();
   const cashStat = useCashPriceInEstimatedTWAP();
-  const scalingFactor = useMemo(() => (cashStat ? Number(cashStat.priceInDollars).toFixed(4) : null), [cashStat]);
+  const scalingFactor = useMemo(() => (cashStat ? Number(cashStat.priceInDollars).toFixed(4) : '0.0000'), [cashStat]);
   const TVL = useTotalValueLocked();
   const cashPrice = useCashPriceInLastTWAP();
   const bondScale = (Number(cashPrice) / 100000000000000).toFixed(4);
 
   const [banks] = useBanks();
-  const activeBanks = banks.filter((bank) => !bank.finished && bank.poolId === 1 || bank.poolId === 0);
+  const activeBanks = banks.filter((bank) => !bank.finished && (bank.poolId === 1 || bank.poolId === 0));
+
 
   const bondStat = useBondStats();
   const bombFinance = useBombFinance();
   const bondBalance = useTokenBalance(bombFinance?.BBOND);
 
+  const catchError = useCatchError();
+  const {
+    contracts: {Treasury},
+  } = useBombFinance();
+  const [approveStatus, approve] = useApprove(bombFinance.BOMB, Treasury.address);
+  const [redeemStatus, redeem] = useApprove(bombFinance.BBOND, Treasury.address);
+
+
   return (
     <section className='flex flex-wrap flex-col max-w-full h-auto bg-[#373747] items-center p-0 m-0 text-white'>
-
-      {/* <div className=" h-auto fixed overflow-x-hidden">
-        <svg height='1000' width='1300' >
-          <image href={ One } height='110vh' width='1100' />
-          <image href={ Two } height='110vh' width='1150'  />
-          <image href={ Three } height='110vh' width='1200'  />
-          <image href={ Four } height='110vh' width='1250'  />
-          <image href={ Five } height='110vh' width='1300'  />
-          <image href={ Six } height='110vh' width='1325'  />
-          <image href={ Seven } height='110vh' width='1350'  />
-          <image href={ Eight } height='110vh' width='1375'  />
-          <image href={ Nine } height='110vh' width='1400'  />
-          <image href={ Ten } height='110vh' width='1425'  />
-          <image href={ Eleven } height='110vh' width='1450'  />
-          <image href={ Twelve } height='110vh' width='1475'  />
+      
+      {/* Background */}
+      <div className=" h-auto fixed overflow-hidden">
+        <svg height='1000' width='1000' >
+          <image href={ One } height='900' width='900' />
+          <image href={ Two } height='910' width='910'  />
+          <image href={ Three } height='920' width='920'  />
+          <image href={ Four } height='930' width='930'  />
+          <image href={ Five } height='940' width='940'  />
+          <image href={ Six } height='950' width='950'  />
+          <image href={ Seven } height='960' width='960'  />
+          <image href={ Eight } height='970' width='970'  />
+          <image href={ Nine } height='980' width='980'  />
+          <image href={ Ten } height='985' width='985'  />
+          <image href={ Eleven } height='990' width='990'  />
+          <image href={ Twelve } height='1000' width='1000'  />
         </svg>
-      </div> */}
+      </div>
 
+      {/* BOMB Finance SUMMARY */}
       <div className="flex flex-wrap flex-col h-80 w-3/4 p-3 bg mt-5">
         <div className="flex flex-wrap h-12 w-full justify-center border-b-[#C3C5CBBF] border-b-[1px]">
-          <h1>Bomb Finance Summary</h1>
+          <h1 className='text-2xl font-semibold'>Bomb Finance Summary</h1>
         </div>
         <div className="flex flex-wrap flex-row">
           <div className="flex flex-wrap w-2/3 items-center justify-start">
@@ -143,21 +148,21 @@ const Dashboard = () => {
               </thead>
               <tbody>
 
-                <TableData icon={Bomb} type='$BOMB' currSupply={bombCirculatingSupply} totalSupply={bombTotalSupply} priceinDollar={bombPriceInDollars} priceinBNB={bombPriceInBNB} />
+                <TableData icon={Bomb} type='BOMB' currSupply={bombCirculatingSupply} totalSupply={bombTotalSupply} priceinDollar={bombPriceInDollars} priceinBNB={bombPriceInBNB} />
 
-                <TableData icon={BShares} type='$BSHARE' currSupply={bShareCirculatingSupply} totalSupply={bShareTotalSupply} priceinDollar={bSharePriceInDollars} priceinBNB={bSharePriceInBNB} />
+                <TableData icon={BShares} type='BSHARE' currSupply={bShareCirculatingSupply} totalSupply={bShareTotalSupply} priceinDollar={bSharePriceInDollars} priceinBNB={bSharePriceInBNB} />
 
-                <TableData icon={BBond} type='$BBOND' currSupply={tBondCirculatingSupply} totalSupply={tBondTotalSupply} priceinDollar={tBondPriceInDollars} priceinBNB={tBondPriceInBNB} />
+                <TableData icon={BBond} type='BBOND' currSupply={tBondCirculatingSupply} totalSupply={tBondTotalSupply} priceinDollar={tBondPriceInDollars} priceinBNB={tBondPriceInBNB} />
 
               </tbody>
             </table>
           </div>
           <div className="flex flex-wrap flex-col w-1/3 items-center justify-end">
             <div className="flex flex-wrap h-20 justify-center items-center border-b-2 border-b-[#C3C5CBBF]">
-              <span>Current Epoch<p className='flex justify-center items-center'>{Number(currentEpoch)}</p></span>
+              <span>Current Epoch<p className='flex justify-center items-center text-2xl font-semibold'>{Number(currentEpoch)}</p></span>
             </div>
             <div className="flex flex-wrap h-20 justify-center items-center border-b-2 border-b-[#C3C5CBBF]">
-              <span><p className='flex justify-center items-center'><ProgressCountdown base={moment().toDate()} hideBar={true} deadline={to} description="Next Epoch" /></p>Next Epoch in</span>
+              <span><p className='flex justify-center items-center text-2xl font-semibold'><ProgressCountdown base={moment().toDate()} hideBar={true} deadline={to} description="Next Epoch" /></p>Next Epoch in</span>
             </div>
             <div className="flex flex-wrap h-20 justify-center items-center text-[#C3C5CBBF]">
               <span>
@@ -171,22 +176,21 @@ const Dashboard = () => {
       </div>
 
 
-
+      {/* 2-nd section containing Latest news, Boardroom, Chat on Discord, Read Investment Strategy & Docs */}
       <div className="flex flex-wrap flex-row h-96 w-3/4 m-2">
         <div className="flex flex-wrap flex-col w-2/3 p-2">
-          <a href='https://bombbshare.medium.com/the-bomb-cycle-how-to-print-forever-e89dc82c12e5' target='_blank' className="flex flex-wrap justify-end underline text-[#9EE6FF]">Read Investment Strategy&gt;</a>
+          <a href='https://bombbshare.medium.com/the-bomb-cycle-how-to-print-forever-e89dc82c12e5' target='_blank' rel='noopener noreferrer' className="flex flex-wrap justify-end underline text-[#9EE6FF]">Read Investment Strategy&gt;</a>
           <button onClick={() => {window.open('https://app.bogged.finance/bsc/swap','_blank')}} className='bg-[#00ADE8] opacity-75 font-bold p-1 m-1 border-[#E41A1A] border-2'>Invest Now</button>
           <div className='flex flex-wrap flex-row h-11'>
             <button onClick={() => {window.open('https://discord.com/invite/94Aa4wSz3e','_blank')}} className='bg-slate-400 opacity-75 text-black h-9 border-[#728CDF] border-2 w-[299px] justify-center p-1 m-1'><span className='inline-flex'><img src={ Discord } alt="" className='h-6 w-6 p-1 rounded-full bg-white' />&nbsp;Chat on Discord</span></button>
             <button onClick={() => {window.open('https://docs.bomb.money/welcome-start-here/readme','_blank')}} className='bg-slate-400 opacity-75 text-black h-9 border-[#728CDF] border-2 w-[300px] justify-center p-1 m-1'><span className='inline-flex'><img src={ Docs } alt="" className='h-6 w-6 p-1 rounded-full bg-white' />&nbsp;Read Docs</span></button>
           </div>
-          <SmallPoster />
+          <SmallPoster bsharePrice={bSharePriceInDollars} />
         </div>
-        <div className="flex flex-wrap bg w-1/3 h-96 p-3 rounded-lg border-[#728CDF] border-2">Latest News</div>
+        <div className="flex flex-wrap bg w-1/3 h-96 p-3 rounded-lg border-[#728CDF] border-2 text-lg font-semibold">Latest News</div>
       </div>
 
-
-
+      {/* BOMB FARMS */}
       <div className="flex flex-wrap flex-col h-[700px] w-3/4 bg p-3 rounded-lg border-2 border-[#728CDF]">
         <div className="flex flex-wrap flex-row h-20">
           <div className='flex flex-wrap w-[50%] justify-start'>
@@ -205,11 +209,10 @@ const Dashboard = () => {
         {activeBanks.map((bank) => {
             return(<AccessOnebyOne key={bank.poolId} type={bank.depositTokenName.replace('-LP','')} bankId={bank.contract} stakeIcon={(bank.poolId === 1) ? BombBitcoin : BombbnbLP } earnedIcon={BShares} />);
         })}
-        
-        {/* <BigPoster type='BSHARE-BNB' returns={} stakeInNum={} stakeInDollar={} earnedInNum={} earnedInDollar={} stakeIcon={BombbnbLP} earnedIcon={BShares} /> */}
+
       </div>
 
-
+        {/* BBONDS */}
       <div className="flex flex-wrap flex-col h-72 w-3/4 bg m-2 rounded-lg border-2 border-[#728CDF] p-3">
         <div className="flex flex-wrap h-30 w-3/4">
           <img src={ BBond } alt="" className='h-12 w-12' />
@@ -222,7 +225,7 @@ const Dashboard = () => {
           <div className="flex flex-wrap w-1/4 items-center justify-center p-3">
             <span>
               <p>Current Price: (Bomb)^2</p>
-              <h3>10K BBOND = {Number(bondStat?.tokenInFtm).toFixed(4) || '-'} BTCB</h3>
+              <h3 className='text-base font-bold'>10K BBOND = {Number(bondStat?.tokenInFtm).toFixed(4) || '-'} BTCB</h3>
             </span>
           </div>
           <div className="flex flex-wrap flex-col w-1/4 items-center justify-center p-5">
@@ -230,8 +233,8 @@ const Dashboard = () => {
                 <p>Available to redeem</p>
               </div>
               <div className='flex flex-wrap h-30'>
-                <img src={ BBond } alt="" className='h-5 w-5' />
-                <h3 className='ml-5 text-base font-extrabold'>{getDisplayBalance(bondBalance)}</h3>
+                <img src={ BBond } alt="" className='h-8 w-8' />
+                <h3 className='ml-1 text-3xl font-semibold'>{getDisplayBalance(bondBalance)}</h3>
               </div>
           </div>
           <div className="flex flex-wrap flex-col w-2/4 p-3">
@@ -241,13 +244,13 @@ const Dashboard = () => {
                 <p>Bomb is over peg</p>
               </span>
               <div className='flex flex-wrap justify-end w-2/4'>
-                <button className='border-2 border-white rounded-full h-10 w-36 pt-1 pb-1'>Purchase</button>
+                <button disabled={approveStatus === ApprovalState.PENDING || approveStatus === ApprovalState.UNKNOWN} onClick={() => catchError(approve(), `Unable to approve BOMB`)} className='border-2 border-white rounded-full h-10 w-36 pt-1 pb-1'>Purchase</button>
               </div>
             </div>
             <div className="flex flex-wrap h-20 mt-5 p-2">
-              <p className='w-2/4'>Redeem Bomb</p>
+              <h3 className='w-2/4'>Redeem Bomb</h3>
               <div className='flex flex-wrap justify-end w-2/4'>
-                <button className='border-2 border-white rounded-full h-10 w-36 pt-1 pb-1'>Redeem</button>
+                <button disabled={redeemStatus === ApprovalState.PENDING || redeemStatus === ApprovalState.UNKNOWN} onClick={() => catchError(redeem(), `Unable to redeem BBOND`)} className='border-2 border-white rounded-full h-10 w-36 pt-1 pb-1'>Redeem</button>
               </div>
             </div>
           </div>

@@ -1,7 +1,5 @@
 import React from 'react';
 
-import Bomb from '../assets/bomb.png';
-import BShares from '../assets/bshares.png';
 import Label from '../../../components/Label';
 
 const Details = ({ returns,stakeInNum,stakeInDollar,earnedInNum,earnedInDollar,stakeIcon,earnedIcon }) => {
@@ -10,7 +8,7 @@ const Details = ({ returns,stakeInNum,stakeInDollar,earnedInNum,earnedInDollar,s
                 <div className="flex flex-wrap w-1/6 justify-center items-center">
                     <span>
                         <p>Daily Returns:</p>
-                        <h1>{returns}%</h1>
+                        <h2>{returns}%</h2>
                     </span>
                 </div>
                 <div className="flex flex-wrap w-1/6 justify-center items-center">

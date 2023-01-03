@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+th,td {
+    width: 22%;
+    text-align: center;
+}
+
+.bg {
+    background-color: rgba(35, 40, 75, 0.75);
+    z-index: 9;
+}

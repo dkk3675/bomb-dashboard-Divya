@@ -34,13 +34,11 @@ const Bank: React.FC = () => {
   const classes = useStyles();
   const {bankId} = useParams();
   const bank = useBank(bankId);
-  // console.log(typeof(bankId),"type here",bankId,typeof(bank));
 
   const {account} = useWallet();
   const { onRedeem } = useRedeem(bank);
 
   let statsOnPool = useStatsForPool(bank);
-  console.log(bank,"hello",statsOnPool);
   // console.log(statsOnPool);
 
   //   if (bank.depositTokenName.includes('80BOMB-20BTCB-LP') || bank.depositTokenName.includes('80BSHARE-20WBNB-LP')) {

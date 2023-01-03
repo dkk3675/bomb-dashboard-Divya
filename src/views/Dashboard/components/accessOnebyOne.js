@@ -1,13 +1,7 @@
 import React,{ useMemo } from 'react';
 
-import Bomb from '../assets/bomb.png';
-import BBond from '../assets/bbond.png';
-import BShares from '../assets/bshares.png';
-import BombBitcoin from '../assets/bomb-bitcoin.png';
-import BombbnbLP from '../assets/bomb-bnb-lp.png';
 import BigPoster from './bigposter';
 
-import useBanks from '../../../hooks/useBanks';
 import useBank from '../../../hooks/useBank';
 import useStatsForPool from '../../../hooks/useStatsForPool';
 import useEarnings from '../../../hooks/useEarnings';
@@ -22,7 +16,6 @@ const AccessOnebyOne = ({ type,bankId,stakeIcon,earnedIcon }) => {
     const bank = useBank(bankId);
     
     let statsOnPool = useStatsForPool(bank);
-    console.log(typeof(bankId),"type here",bankId,typeof(bank),statsOnPool);
 
     const earnings = useEarnings(bank.contract, bank.earnTokenName, bank.poolId);
     const tShareStats = useShareStats();
@@ -34,9 +27,8 @@ const AccessOnebyOne = ({ type,bankId,stakeIcon,earnedIcon }) => {
     const earnedInDollars = (Number(tokenPriceInDollars) * Number(getDisplayBalance(earnings))).toFixed(2);
     const stakedBalance = useStakedBalance(bank.contract, bank.poolId);
 
-    // console.log(bank,statsOnPool?.dailyAPR,getDisplayBalance(earnings),earnedInDollars,getDisplayBalance(stakedBalance, bank.depositToken.decimal),earnedInDollars);
     return(
-      <BigPoster type={type} returns={bank.closedForStaking ? '0.00' : statsOnPool?.dailyAPR} TVL={statsOnPool?.TVL} stakeInNum={getDisplayBalance(earnings)} stakeInDollar={earnedInDollars} earnedInNum={getDisplayBalance(stakedBalance, bank.depositToken.decimal)} earnedInDollar={earnedInDollars} stakeIcon={stakeIcon} earnedIcon={earnedIcon} />
+      <BigPoster type={type} returns={bank.closedForStaking ? '0.00' : statsOnPool?.dailyAPR || '0.00'} TVL={statsOnPool?.TVL || '0.00'} stakeInNum={getDisplayBalance(earnings)} stakeInDollar={earnedInDollars} earnedInNum={getDisplayBalance(stakedBalance, bank.depositToken.decimal)} earnedInDollar={earnedInDollars} stakeIcon={stakeIcon} earnedIcon={earnedIcon} bank={bank} />
     );
 }
 
