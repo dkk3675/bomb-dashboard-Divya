@@ -1,11 +1,44 @@
-import React from 'react';
+import React,{useMemo} from 'react';
+
+import useFetchBoardroomAPR from '../../../hooks/useFetchBoardroomAPR';
+import { getDisplayBalance } from '../../../utils/formatBalance';
+import useTotalStakedOnBoardroom from '../../../hooks/useTotalStakedOnBoardroom';
+import Label from '../../../components/Label';
+import Value from '../../../components/Value';
+import useStakedBalanceOnBoardroom from '../../../hooks/useStakedBalanceOnBoardroom';
+import useStakedTokenPriceInDollars from '../../../hooks/useStakedTokenPriceInDollars';
+import useBombFinance from '../../../hooks/useBombFinance';
+import useBombStats from '../../../hooks/useBombStats';
+import useEarningsOnBoardroom from '../../../hooks/useEarningsOnBoardroom';
+
 
 import Bomb from '../assets/bomb.png';
 import BBond from '../assets/bbond.png';
 import BShares from '../assets/bshares.png';
 import BombBitcoin from '../assets/bomb-bitcoin.png';
+import Details from './details';
 
 const SmallPoster = () => {
+    const bombStats = useBombStats();
+    const bombFinance = useBombFinance();
+    const boardroomAPR = useFetchBoardroomAPR();
+    const totalStaked = useTotalStakedOnBoardroom();
+    const stakedBalance = useStakedBalanceOnBoardroom();
+    const stakedTokenPriceInDollars = useStakedTokenPriceInDollars('BSHARE', bombFinance.BSHARE);
+    const tokenPriceInDollars = useMemo(
+        () =>
+          stakedTokenPriceInDollars
+            ? (Number(stakedTokenPriceInDollars) * Number(getDisplayBalance(stakedBalance))).toFixed(2).toString()
+            : null,
+        [stakedTokenPriceInDollars, stakedBalance],
+    );
+    const earnings = useEarningsOnBoardroom();
+    const tokenBombInDollars = useMemo(
+        () => bombStats ? Number(bombStats.priceInDollars).toFixed(2) : null,
+        [bombStats],
+    );
+    const earnedInDollars = (Number(tokenBombInDollars) * Number(getDisplayBalance(earnings))).toFixed(2);
+    
     return(
         <div className="flex flex-wrap flex-col w-full bg p-3 rounded-lg border-2 border-[#728CDF]">
             <div className="flex flex-wrap h-20 w-full">
@@ -27,42 +60,11 @@ const SmallPoster = () => {
             </div>
 
             <div className="flex flex-wrap flex-row h-[155px] border-b-2 border-white">
-                <div className="flex flex-wrap w-1/6 justify-center items-center">
-                    <span>
-                        <p>Daily Returns:</p>
-                        <h1>2%</h1>
-                    </span>
-                </div>
-                <div className="flex flex-wrap w-1/6 justify-center items-center">
-                    <span>
-                        <p>Your Stake:</p>
-                        <div className="inline-flex">
-                            <div>
-                                <img src={ BShares } alt="" className='h-6 w-6'/>
-                            </div>
-                            <div>
-                                <p>124.21</p>
-                            </div>
-                        </div>
-                        <p>	&asymp; $1171.62</p>
-                    </span>
-                </div>
-                <div className="flex flex-wrap w-1/6 justify-center items-center">
-                    <span>
-                        <p>Earned:</p>
-                        <div className="inline-flex">
-                            <div>
-                                <img src={ Bomb } alt="" className='h-6 w-6'/>
-                            </div>
-                            <div>
-                                <p>6.4413</p>
-                            </div>
-                        </div>
-                        <p>	&asymp; $298.88</p>
-                    </span>
-                </div>
+                
+                <Details returns={(boardroomAPR/(30*12)).toFixed(2)} stakeInNum={getDisplayBalance(stakedBalance)} stakeInDollar={tokenPriceInDollars} earnedInNum={getDisplayBalance(earnings)} earnedInDollar={earnedInDollars} stakeIcon={BShares} earnedIcon={Bomb} />
+
                 <div className="flex flex-wrap w-3/6 justify-end items-end mb-5">
-                  <p className='inline-flex'>Total Staked: <img src={ BShares } alt="" className='h-5 w-5' />7232</p>
+                  <p className='inline-flex'>Total Staked: <img src={ BShares } alt="" className='h-5 w-5' />{Math.round(getDisplayBalance(totalStaked))}</p>
                   <div className="inline-flex">
                     <button className='border-2 border-white rounded-full h-10 w-28 pt-1 pb-1 ml-2'>Deposit</button>
                     <button className='border-2 border-white rounded-full h-10 w-28 pt-1 pb-1 ml-2'>Withdraw</button>

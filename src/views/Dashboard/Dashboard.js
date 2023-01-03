@@ -1,11 +1,37 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import useBondStats from '../../hooks/useBondStats';
+import usebShareStats from '../../hooks/usebShareStats';
+import useBombStats from '../../hooks/useBombStats';
+import useLpStats from '../../hooks/useLpStats';
+import useLpStatsBTC from '../../hooks/useLpStatsBTC';
+
+import useCurrentEpoch from '../../hooks/useCurrentEpoch';
+import moment from 'moment';
+import useTreasuryAllocationTimes from '../../hooks/useTreasuryAllocationTimes';
+import ProgressCountdown from '../Boardroom/components/ProgressCountdown';
+import useCashPriceInEstimatedTWAP from '../../hooks/useCashPriceInEstimatedTWAP';
+import CountUp from 'react-countup';
+import useTotalValueLocked from '../../hooks/useTotalValueLocked';
+import useCashPriceInLastTWAP from '../../hooks/useCashPriceInLastTWAP';
+import useStakedBalance from '../../hooks/useStakedBalance';
+
+import useBanks from '../../hooks/useBanks';
+import useBank from '../../hooks/useBank';
+import useStatsForPool from '../../hooks/useStatsForPool';
+
+import {getDisplayBalance} from '../../utils/formatBalance';
+import useBombFinance from '../../hooks/useBombFinance';
+import useTokenBalance from '../../hooks/useTokenBalance';
+import useEarnings from '../../hooks/useEarnings';
+import useShareStats from '../../hooks/usebShareStats';
+
 
 import './Dashboard.css';
 import Bomb from './assets/bomb.png';
 import BBond from './assets/bbond.png';
 import BShares from './assets/bshares.png';
 import BombBitcoin from './assets/bomb-bitcoin.png';
-import MetaMask from './assets/metamask.png';
+import BombbnbLP from './assets/bomb-bnb-lp.png';
 import Discord from './assets/discord.png';
 import Docs from './assets/docs.png';
 import BigPoster from './components/bigposter';
@@ -22,8 +48,63 @@ import Nine from './assets/Vector 90 - Vector 91 - 182.svg';
 import Ten from './assets/Vector 90 - Vector 91 - 91.svg';
 import Eleven from './assets/Vector 90.svg';
 import Twelve from './assets/Vector 91.svg';
+import TableData from './components/tabledata';
+import AccessOnebyOne from './components/accessOnebyOne';
+
 
 const Dashboard = () => {
+  const bombStats = useBombStats();
+  const bShareStats = usebShareStats();
+  const tBondStats = useBondStats();
+
+  const bombPriceInBNB = useMemo(() => (bombStats ? Number(bombStats.tokenInFtm).toFixed(4) : null), [bombStats]);
+  const bombPriceInDollars = useMemo(
+    () => (bombStats ? Number(bombStats.priceInDollars).toFixed(2) : null),
+    [bombStats],
+  );
+  const bombCirculatingSupply = useMemo(() => (bombStats ? String(bombStats.circulatingSupply) : null), [bombStats]);
+  const bombTotalSupply = useMemo(() => (bombStats ? String(bombStats.totalSupply) : null), [bombStats]);
+
+  const bSharePriceInDollars = useMemo(
+    () => (bShareStats ? Number(bShareStats.priceInDollars).toFixed(2) : null),
+    [bShareStats],
+  );
+  const bSharePriceInBNB = useMemo(
+    () => (bShareStats ? Number(bShareStats.tokenInFtm).toFixed(4) : null),
+    [bShareStats],
+  );
+  const bShareCirculatingSupply = useMemo(
+    () => (bShareStats ? String(bShareStats.circulatingSupply) : null),
+    [bShareStats],
+  );
+  const bShareTotalSupply = useMemo(() => (bShareStats ? String(bShareStats.totalSupply) : null), [bShareStats]);
+
+  const tBondPriceInDollars = useMemo(
+    () => (tBondStats ? Number(tBondStats.priceInDollars).toFixed(2) : null),
+    [tBondStats],
+  );
+  const tBondPriceInBNB = useMemo(() => (tBondStats ? Number(tBondStats.tokenInFtm).toFixed(4) : null), [tBondStats]);
+  const tBondCirculatingSupply = useMemo(
+    () => (tBondStats ? String(tBondStats.circulatingSupply) : null),
+    [tBondStats],
+  );
+  const tBondTotalSupply = useMemo(() => (tBondStats ? String(tBondStats.totalSupply) : null), [tBondStats]);
+
+  const currentEpoch = useCurrentEpoch();
+  const { to } = useTreasuryAllocationTimes();
+  const cashStat = useCashPriceInEstimatedTWAP();
+  const scalingFactor = useMemo(() => (cashStat ? Number(cashStat.priceInDollars).toFixed(4) : null), [cashStat]);
+  const TVL = useTotalValueLocked();
+  const cashPrice = useCashPriceInLastTWAP();
+  const bondScale = (Number(cashPrice) / 100000000000000).toFixed(4);
+
+  const [banks] = useBanks();
+  const activeBanks = banks.filter((bank) => !bank.finished && bank.poolId === 1 || bank.poolId === 0);
+
+  const bondStat = useBondStats();
+  const bombFinance = useBombFinance();
+  const bondBalance = useTokenBalance(bombFinance?.BBOND);
+
   return (
     <section className='flex flex-wrap flex-col max-w-full h-auto bg-[#373747] items-center p-0 m-0 text-white'>
 
@@ -61,42 +142,28 @@ const Dashboard = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr className='border-b-2 border-[#C3C5CBBF] p-3'>
-                  <td><span className='inline-flex'><img src={ Bomb } alt="" className='h-5 w-5 p-1 rounded-full bg-gray-700' />$BOMB</span></td>
-                  <td>8.66M</td>
-                  <td>60.9k</td>
-                  <td>$0.24<br />1.05 BTCB</td>
-                  <td><img src={ MetaMask } alt="" className='h-10 w-10' /></td>
-                </tr>
-                <tr className='border-b-2 border-[#C3C5CBBF] p-3'>
-                  <td><span className='inline-flex'><img src={ BShares } alt="" className='h-5 w-5 p-1 rounded-full bg-gray-700' />$BSHARE</span></td>
-                  <td>11.43K</td>
-                  <td>8.49m</td>
-                  <td>$300<br />13000 BTCB</td>
-                  <td><img src={ MetaMask } alt="" className='h-10 w-10' /></td>
-                </tr>
-                <tr className='border-b-2 border-[#C3C5CBBF] p-3'>
-                  <td><span className='inline-flex'><img src={ BBond } alt="" className='h-5 w-5 p-1 rounded-full bg-gray-700' />$BBOND</span></td>
-                  <td>20.00K</td>
-                  <td>175k</td>
-                  <td>$0.28<br />1.15 BTCB</td>
-                  <td><img src={ MetaMask } alt="" className='h-10 w-10' /></td>
-                </tr>
+
+                <TableData icon={Bomb} type='$BOMB' currSupply={bombCirculatingSupply} totalSupply={bombTotalSupply} priceinDollar={bombPriceInDollars} priceinBNB={bombPriceInBNB} />
+
+                <TableData icon={BShares} type='$BSHARE' currSupply={bShareCirculatingSupply} totalSupply={bShareTotalSupply} priceinDollar={bSharePriceInDollars} priceinBNB={bSharePriceInBNB} />
+
+                <TableData icon={BBond} type='$BBOND' currSupply={tBondCirculatingSupply} totalSupply={tBondTotalSupply} priceinDollar={tBondPriceInDollars} priceinBNB={tBondPriceInBNB} />
+
               </tbody>
             </table>
           </div>
           <div className="flex flex-wrap flex-col w-1/3 items-center justify-end">
             <div className="flex flex-wrap h-20 justify-center items-center border-b-2 border-b-[#C3C5CBBF]">
-              <span>Current Epoch<p className='flex justify-center items-center'>258</p></span>
+              <span>Current Epoch<p className='flex justify-center items-center'>{Number(currentEpoch)}</p></span>
             </div>
             <div className="flex flex-wrap h-20 justify-center items-center border-b-2 border-b-[#C3C5CBBF]">
-              <span><p className='flex justify-center items-center'>03:38:36</p>Next Epoch in</span>
+              <span><p className='flex justify-center items-center'><ProgressCountdown base={moment().toDate()} hideBar={true} deadline={to} description="Next Epoch" /></p>Next Epoch in</span>
             </div>
             <div className="flex flex-wrap h-20 justify-center items-center text-[#C3C5CBBF]">
               <span>
-                <h4 className='flex justify-center items-center'>Live TWAP:&nbsp;<p className='text-[#00E8A2]'>1.17</p></h4>
-                <h4 className='flex justify-center items-center'>TVL:&nbsp;<p className='text-[#00E8A2]'>$5,002,412</p></h4>
-                <h4 className='flex justify-center items-center'>Last Epoch TWAP:&nbsp;<p className='text-[#00E8A2]'>1.22</p></h4>
+                <h4 className='flex justify-center items-center'>Live TWAP:&nbsp;<p className='text-[#00E8A2]'>{scalingFactor}</p></h4>
+                <h4 className='flex justify-center items-center'>TVL:&nbsp;<p className='text-[#00E8A2]'><CountUp end={TVL} separator="," prefix="$" /></p></h4>
+                <h4 className='flex justify-center items-center'>Last Epoch TWAP:&nbsp;<p className='text-[#00E8A2]'>{bondScale || '-'}</p></h4>
               </span>
             </div>
           </div>
@@ -107,11 +174,11 @@ const Dashboard = () => {
 
       <div className="flex flex-wrap flex-row h-96 w-3/4 m-2">
         <div className="flex flex-wrap flex-col w-2/3 p-2">
-          <div className="flex flex-wrap justify-end underline text-[#9EE6FF]">Read Investment Strategy&gt;</div>
-          <button className='bg-[#00ADE8] opacity-75 font-bold p-1 m-1 border-[#E41A1A] border-2'>Invest Now</button>
+          <a href='https://bombbshare.medium.com/the-bomb-cycle-how-to-print-forever-e89dc82c12e5' target='_blank' className="flex flex-wrap justify-end underline text-[#9EE6FF]">Read Investment Strategy&gt;</a>
+          <button onClick={() => {window.open('https://app.bogged.finance/bsc/swap','_blank')}} className='bg-[#00ADE8] opacity-75 font-bold p-1 m-1 border-[#E41A1A] border-2'>Invest Now</button>
           <div className='flex flex-wrap flex-row h-11'>
-            <button className='bg-slate-400 opacity-75 text-black h-9 border-[#728CDF] border-2 w-[299px] justify-center p-1 m-1'><span className='inline-flex'><img src={ Discord } alt="" className='h-6 w-6 p-1 rounded-full bg-white' />&nbsp;Chat on Discord</span></button>
-            <button className='bg-slate-400 opacity-75 text-black h-9 border-[#728CDF] border-2 w-[300px] justify-center p-1 m-1'><span className='inline-flex'><img src={ Docs } alt="" className='h-6 w-6 p-1 rounded-full bg-white' />&nbsp;Read Docs</span></button>
+            <button onClick={() => {window.open('https://discord.com/invite/94Aa4wSz3e','_blank')}} className='bg-slate-400 opacity-75 text-black h-9 border-[#728CDF] border-2 w-[299px] justify-center p-1 m-1'><span className='inline-flex'><img src={ Discord } alt="" className='h-6 w-6 p-1 rounded-full bg-white' />&nbsp;Chat on Discord</span></button>
+            <button onClick={() => {window.open('https://docs.bomb.money/welcome-start-here/readme','_blank')}} className='bg-slate-400 opacity-75 text-black h-9 border-[#728CDF] border-2 w-[300px] justify-center p-1 m-1'><span className='inline-flex'><img src={ Docs } alt="" className='h-6 w-6 p-1 rounded-full bg-white' />&nbsp;Read Docs</span></button>
           </div>
           <SmallPoster />
         </div>
@@ -134,8 +201,12 @@ const Dashboard = () => {
               </button>
           </div>
         </div>
-        <BigPoster />
-        <BigPoster />
+
+        {activeBanks.map((bank) => {
+            return(<AccessOnebyOne key={bank.poolId} type={bank.depositTokenName.replace('-LP','')} bankId={bank.contract} stakeIcon={(bank.poolId === 1) ? BombBitcoin : BombbnbLP } earnedIcon={BShares} />);
+        })}
+        
+        {/* <BigPoster type='BSHARE-BNB' returns={} stakeInNum={} stakeInDollar={} earnedInNum={} earnedInDollar={} stakeIcon={BombbnbLP} earnedIcon={BShares} /> */}
       </div>
 
 
@@ -148,10 +219,10 @@ const Dashboard = () => {
           </span>
         </div>
         <div className="flex flex-wrap flex-row h-40 p-3">
-          <div className="flex flex-wrap w-1/4 items-center justify-center p-5">
+          <div className="flex flex-wrap w-1/4 items-center justify-center p-3">
             <span>
               <p>Current Price: (Bomb)^2</p>
-              <h3>BBond = 6.2872 BTCB</h3>
+              <h3>10K BBOND = {Number(bondStat?.tokenInFtm).toFixed(4) || '-'} BTCB</h3>
             </span>
           </div>
           <div className="flex flex-wrap flex-col w-1/4 items-center justify-center p-5">
@@ -160,7 +231,7 @@ const Dashboard = () => {
               </div>
               <div className='flex flex-wrap h-30'>
                 <img src={ BBond } alt="" className='h-5 w-5' />
-                <h3 className='ml-5 text-base font-extrabold'>456</h3>
+                <h3 className='ml-5 text-base font-extrabold'>{getDisplayBalance(bondBalance)}</h3>
               </div>
           </div>
           <div className="flex flex-wrap flex-col w-2/4 p-3">
