@@ -113,19 +113,19 @@ const Dashboard = () => {
       
       {/* Background */}
       <div className=" h-auto fixed overflow-hidden">
-        <svg height='1000' width='1000' >
-          <image href={ One } height='900' width='900' />
+        <svg height='1000' width='950' >
+          <image href={ One } height='900' width='905' />
           <image href={ Two } height='910' width='910'  />
-          <image href={ Three } height='920' width='920'  />
-          <image href={ Four } height='930' width='930'  />
-          <image href={ Five } height='940' width='940'  />
-          <image href={ Six } height='950' width='950'  />
-          <image href={ Seven } height='960' width='960'  />
-          <image href={ Eight } height='970' width='970'  />
-          <image href={ Nine } height='980' width='980'  />
-          <image href={ Ten } height='985' width='985'  />
-          <image href={ Eleven } height='990' width='990'  />
-          <image href={ Twelve } height='1000' width='1000'  />
+          <image href={ Three } height='920' width='915'  />
+          <image href={ Four } height='930' width='920'  />
+          <image href={ Five } height='940' width='925'  />
+          <image href={ Six } height='950' width='930'  />
+          <image href={ Seven } height='960' width='935'  />
+          <image href={ Eight } height='970' width='940'  />
+          <image href={ Nine } height='980' width='942'  />
+          <image href={ Ten } height='985' width='945'  />
+          <image href={ Eleven } height='990' width='948'  />
+          <image href={ Twelve } height='1000' width='950'  />
         </svg>
       </div>
 
