@@ -93,7 +93,7 @@ const Dashboard = () => {
   const currentEpoch = useCurrentEpoch();
   const { to } = useTreasuryAllocationTimes();
   const cashStat = useCashPriceInEstimatedTWAP();
-  const scalingFactor = useMemo(() => (cashStat ? Number(cashStat.priceInDollars).toFixed(4) : null), [cashStat]);
+  const scalingFactor = useMemo(() => (cashStat ? Number(cashStat.priceInDollars).toFixed(4) : '0.0000'), [cashStat]);
   const TVL = useTotalValueLocked();
   const cashPrice = useCashPriceInLastTWAP();
   const bondScale = (Number(cashPrice) / 100000000000000).toFixed(4);
