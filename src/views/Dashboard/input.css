@@ -12,3 +12,43 @@ td {
   background-color: rgba(35, 40, 75, 0.75);
   z-index: 9;
 }
+
+.grad1 {
+  width: 195px;
+  height: 195px;
+  left: 345.92px;
+  top: 300px;
+  background: linear-gradient(225.09deg, #00e8a2 25.04%, #00ade8 94.09%);
+  opacity: 0.8;
+  filter: blur(75px);
+}
+
+.grad2 {
+  width: 325px;
+  height: 325px;
+  left: 634.51px;
+  top: 250px;
+  background: linear-gradient(341.51deg, #149ee3 25.06%, #5dfdb0 162.32%);
+  opacity: 0.8;
+  filter: blur(75px);
+}
+
+.grad3 {
+  width: 195px;
+  height: 195px;
+  left: 634.72px;
+  top: 200px;
+  background: linear-gradient(341.51deg, #0b8a00 25.06%, #beff97 112.99%);
+  opacity: 0.8;
+  filter: blur(75px);
+}
+
+.grad4 {
+  width: 125px;
+  height: 125px;
+  left: 411.12px;
+  top: 350px;
+  background: linear-gradient(341.51deg, #ff5657 25.06%, #f2d9bb 162.32%);
+  opacity: 0.8;
+  filter: blur(75px);
+}

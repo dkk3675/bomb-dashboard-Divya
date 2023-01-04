@@ -131,6 +131,10 @@ const Dashboard = () => {
   return (
     <section className="flex flex-wrap flex-col max-w-full h-auto bg-[#373747] items-center p-0 m-0 text-white">
       <WalletProviderModal open={isWalletProviderOpen} handleClose={handleWalletProviderClose} />
+      <div className="fixed overflow-hidden grad1" />
+      <div className="fixed overflow-hidden grad2" />
+      <div className="fixed overflow-hidden grad3" />
+      <div className="fixed overflow-hidden grad4" />
       {/* Background */}
       <div className=" h-auto fixed overflow-hidden z-0">
         <svg height="1000" width="950">
@@ -150,7 +154,7 @@ const Dashboard = () => {
       </div>
 
       {/* BOMB Finance SUMMARY */}
-      <div className="flex flex-wrap flex-col h-80 w-3/4 p-3 bg mt-5">
+      <div className="flex flex-wrap flex-col h-80 w-3/4 p-3 bg mt-5 z-20">
         <div className="flex flex-wrap h-12 w-full justify-center border-b-[#C3C5CBBF] border-b-[1px]">
           <h1 className="text-2xl font-semibold">Bomb Finance Summary</h1>
         </div>
