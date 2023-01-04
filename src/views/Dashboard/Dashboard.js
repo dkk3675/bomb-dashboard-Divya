@@ -296,7 +296,7 @@ const Dashboard = () => {
             <button
               onClick={onReward}
               disabled={earnings.eq(0) || !canClaimReward}
-              className={`border-2 border-white rounded-full h-10 w-36 ${
+              className={`border-2 rounded-full h-10 w-36 ${
                 earnings.eq(0) || !canClaimReward ? 'border-[#C3C5CBBF] text-[#C3C5CBBF]' : 'border-white text-white'
               }`}
             >
