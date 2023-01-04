@@ -190,7 +190,7 @@ const Dashboard = () => {
       {/* 2-nd section containing Latest news, Boardroom, Chat on Discord, Read Investment Strategy & Docs */}
       <div className="flex flex-wrap flex-row h-96 w-3/4 m-2">
         <div className="flex flex-wrap flex-col w-2/3 p-2">
-          <a href='https://bombbshare.medium.com/the-bomb-cycle-how-to-print-forever-e89dc82c12e5' target='_blank' className="flex flex-wrap justify-end underline text-[#9EE6FF]">Read Investment Strategy&gt;</a>
+          <a href='https://bombbshare.medium.com/the-bomb-cycle-how-to-print-forever-e89dc82c12e5' target='_blank' className="flex flex-wrap justify-end underline text-[#9EE6FF] opacity-75">Read Investment Strategy&gt;</a>
           <button onClick={() => {window.open('https://app.bogged.finance/bsc/swap','_blank')}} className='bg-[#00ADE8] opacity-75 font-bold p-1 m-1 border-[#E41A1A] border-2'>Invest Now</button>
           <div className='flex flex-wrap flex-row h-11'>
             <button onClick={() => {window.open('https://discord.com/invite/94Aa4wSz3e','_blank')}} className='bg-slate-400 opacity-75 text-black h-9 border-[#728CDF] border-2 w-[299px] justify-center p-1 m-1'><span className='inline-flex'><img src={ Discord } alt="" className='h-6 w-6 p-1 rounded-full bg-white' />&nbsp;Chat on Discord</span></button>
