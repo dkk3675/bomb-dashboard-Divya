@@ -21,9 +21,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowCircleUp,faArrowCircleDown } from '@fortawesome/free-solid-svg-icons';
 import Details from './details';
 
-import UnlockWallet from '../../../components/UnlockWallet';
-import { useWallet } from 'use-wallet';
-
 const SmallPoster = ({ bsharePrice }) => {
     const bombStats = useBombStats();
     const bombFinance = useBombFinance();
@@ -53,7 +50,6 @@ const SmallPoster = ({ bsharePrice }) => {
     const [approveStatus, approve] = useApprove(bombFinance.BSHARE, bombFinance.contracts.Boardroom.address);
     const canWithdraw = useWithdrawCheck();
     const { onRedeem } = useRedeemOnBoardroom();
-    const { account } = useWallet();
     
     return(
         <div className="flex flex-wrap flex-col w-full bg p-3 rounded-lg border-2 border-[#728CDF]">
@@ -82,15 +78,11 @@ const SmallPoster = ({ bsharePrice }) => {
                 <div className="flex flex-wrap w-3/6 justify-end items-end mb-5">
                   <p className='inline-flex'>Total Staked: <img src={ BShares } alt="" className='h-5 w-5' />{totalStake}</p>
                   
-                  {/* {!!account ? (
-                    <div> */}
                   <div className="inline-flex">
-                    <button disabled={approveStatus !== ApprovalState.NOT_APPROVED} onClick={() => approve}className={`border-2 rounded-full h-10 w-28 pt-1 pb-1 ml-2 ${(approveStatus === ApprovalState.NOT_APPROVED) ? 'border-white text-white' : 'border-[#C3C5CBBF] text-[#C3C5CBBF]'}`}>Deposit&nbsp;&nbsp;&nbsp;<FontAwesomeIcon icon={faArrowCircleUp} /></button>
+                    <button disabled={approveStatus !== ApprovalState.NOT_APPROVED} onClick={approve}className={`border-2 rounded-full h-10 w-28 pt-1 pb-1 ml-2 ${(approveStatus === ApprovalState.NOT_APPROVED) ? 'border-white text-white' : 'border-[#C3C5CBBF] text-[#C3C5CBBF]'}`}>Deposit&nbsp;&nbsp;&nbsp;<FontAwesomeIcon icon={faArrowCircleUp} /></button>
                     <button disabled={stakedBalance.eq(0) || (!canWithdraw)} onClick={onRedeem} className={`border-2 rounded-full h-10 w-28 pt-1 pb-1 ml-2 ${stakedBalance.eq(0) || (!canWithdraw) ? 'border-[#C3C5CBBF] text-[#C3C5CBBF]' : 'border-white text-white'}`}>Withdraw&nbsp;&nbsp;&nbsp;<FontAwesomeIcon icon={faArrowCircleDown} /></button>
                   </div>
                     <button onClick={onReward} disabled={earnings.eq(0) || !canClaimReward} className={`border-2 rounded-full h-10 w-[14.5rem] pt-1 pb-1 ${earnings.eq(0) || !canClaimReward ? 'border-[#C3C5CBBF] text-[#C3C5CBBF]' : 'border-white text-white'}`}><span className='inline-flex'>Claim Rewards&nbsp;<img src={ BShares } alt="" className='h-6 w-6 p-1 bg-gray-700 rounded-full' /></span></button>
-                    {/* </div>
-                  ) : ( <UnlockWallet /> )} */}
                 </div>
             </div>
         </div>

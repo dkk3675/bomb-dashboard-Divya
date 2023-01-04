@@ -618,6 +618,14 @@ video {
   position: sticky;
 }
 
+.z-\[5\] {
+  z-index: 5;
+}
+
+.z-0 {
+  z-index: 0;
+}
+
 .m-0 {
   margin: 0px;
 }
@@ -1039,6 +1047,38 @@ video {
 
 .opacity-75 {
   opacity: 0.75;
+}
+
+.opacity-100 {
+  opacity: 1;
+}
+
+.opacity-\[99\] {
+  opacity: 99;
+}
+
+.opacity-\[90\] {
+  opacity: 90;
+}
+
+.opacity-\[70\] {
+  opacity: 70;
+}
+
+.opacity-\[75\] {
+  opacity: 75;
+}
+
+.opacity-80 {
+  opacity: 0.8;
+}
+
+.opacity-95 {
+  opacity: 0.95;
+}
+
+.opacity-\[95\] {
+  opacity: 95;
 }
 
 .outline {

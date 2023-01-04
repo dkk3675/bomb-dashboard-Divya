@@ -88,7 +88,7 @@ const Stake: React.FC = () => {
               <Label text={'BSHARE Staked'} variant="yellow" />
             </StyledCardHeader>
             <StyledCardActions>
-              {/* {approveStatus !== ApprovalState.APPROVED ? ( */}
+              {approveStatus !== ApprovalState.APPROVED ? (
                 <Button
                   disabled={approveStatus !== ApprovalState.NOT_APPROVED}
                   className={approveStatus === ApprovalState.NOT_APPROVED ? 'shinyButton' : 'shinyButtonDisabled'}
@@ -97,7 +97,7 @@ const Stake: React.FC = () => {
                 >
                   Approve BSHARE
                 </Button>
-              {/* ) : (
+               ) : (
                 <>
                   <IconButton disabled={!canWithdrawFromBoardroom} onClick={onPresentWithdraw}>
                     <RemoveIcon color={!canWithdrawFromBoardroom ? '' : 'yellow'} />
@@ -107,7 +107,7 @@ const Stake: React.FC = () => {
                     <AddIcon color={!canWithdrawFromBoardroom ? '' : 'yellow'} />
                   </IconButton>
                 </>
-              )} */}
+              )}
             </StyledCardActions>
           </StyledCardContentInner>
         </CardContent>

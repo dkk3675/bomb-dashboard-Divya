@@ -18,7 +18,6 @@ export enum ApprovalState {
 function useApprove(token: ERC20, spender: string): [ApprovalState, () => Promise<void>] {
   const pendingApproval = useHasPendingApproval(token.address, spender);
   const currentAllowance = useAllowance(token, spender, pendingApproval);
-  console.log(pendingApproval,currentAllowance)
 
   // check the current approval status
   const approvalState: ApprovalState = useMemo(() => {

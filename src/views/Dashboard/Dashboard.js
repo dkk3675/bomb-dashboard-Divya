@@ -50,6 +50,8 @@ import AccessOnebyOne from './components/accessOnebyOne';
 
 import WalletProviderModal from '../../components/WalletProviderModal/WalletProviderModal.js';
 
+import { BOND_REDEEM_PRICE_BN } from '../../bomb-finance/constants';
+
 const Dashboard = () => {
   const [isWalletProviderOpen, setWalletProviderOpen] = useState(true);
 
@@ -118,12 +120,13 @@ const Dashboard = () => {
   const [approveStatus, approve] = useApprove(bombFinance.BOMB, Treasury.address);
   const [redeemStatus, redeem] = useApprove(bombFinance.BBOND, Treasury.address);
 
+  const isBondRedeemable = useMemo(() => cashPrice.gt(BOND_REDEEM_PRICE_BN), [cashPrice]);
 
   return (
     <section className='flex flex-wrap flex-col max-w-full h-auto bg-[#373747] items-center p-0 m-0 text-white'>
       <WalletProviderModal open={isWalletProviderOpen} handleClose={handleWalletProviderClose} />
       {/* Background */}
-      <div className=" h-auto fixed overflow-hidden">
+      <div className=" h-auto fixed overflow-hidden z-0">
         <svg height='1000' width='950' >
           <image href={ One } height='900' width='905' />
           <image href={ Two } height='910' width='910'  />
@@ -190,7 +193,9 @@ const Dashboard = () => {
       {/* 2-nd section containing Latest news, Boardroom, Chat on Discord, Read Investment Strategy & Docs */}
       <div className="flex flex-wrap flex-row h-96 w-3/4 m-2">
         <div className="flex flex-wrap flex-col w-2/3 p-2">
-          <a href='https://bombbshare.medium.com/the-bomb-cycle-how-to-print-forever-e89dc82c12e5' target='_blank' className="flex flex-wrap justify-end underline text-[#9EE6FF]">Read Investment Strategy&gt;</a>
+          <div className='flex flex-wrap w-full justify-end'>
+            <a href='https://bombbshare.medium.com/the-bomb-cycle-how-to-print-forever-e89dc82c12e5' target='_blank' rel="noopener noreferrer" className="underline text-[#9EE6FF] opacity-75">Read Investment Strategy&gt;</a>
+          </div>
           <button onClick={() => {window.open('https://app.bogged.finance/bsc/swap','_blank')}} className='bg-[#00ADE8] opacity-75 font-bold p-1 m-1 border-[#E41A1A] border-2'>Invest Now</button>
           <div className='flex flex-wrap flex-row h-11'>
             <button onClick={() => {window.open('https://discord.com/invite/94Aa4wSz3e','_blank')}} className='bg-slate-400 opacity-75 text-black h-9 border-[#728CDF] border-2 w-[299px] justify-center p-1 m-1'><span className='inline-flex'><img src={ Discord } alt="" className='h-6 w-6 p-1 rounded-full bg-white' />&nbsp;Chat on Discord</span></button>
@@ -255,13 +260,13 @@ const Dashboard = () => {
                 <p>Bomb is over peg</p>
               </span>
               <div className='flex flex-wrap justify-end w-2/4'>
-                <button disabled={approveStatus === ApprovalState.PENDING || approveStatus === ApprovalState.UNKNOWN} onClick={() => catchError(approve(), `Unable to approve BOMB`)} className={`border-2 rounded-full h-10 w-36 pt-1 pb-1 ${approveStatus === ApprovalState.PENDING || approveStatus === ApprovalState.UNKNOWN ? 'border-[#C3C5CBBF] text-[#C3C5CBBF]' : 'border-white text-white'}`}>Purchase&nbsp;&nbsp;&nbsp;<FontAwesomeIcon icon={faShoppingCart} /></button>
+                <button disabled={(approveStatus === ApprovalState.PENDING || approveStatus === ApprovalState.UNKNOWN) && (!bondStat || isBondRedeemable)} onClick={() => catchError(approve(), `Unable to approve BOMB`)} className={`border-2 rounded-full h-10 w-36 pt-1 pb-1 ${(approveStatus === ApprovalState.PENDING || approveStatus === ApprovalState.UNKNOWN) && (!bondStat || isBondRedeemable) ? 'border-[#C3C5CBBF] text-[#C3C5CBBF]' : 'border-white text-white'}`}>Purchase&nbsp;&nbsp;&nbsp;<FontAwesomeIcon icon={faShoppingCart} /></button>
               </div>
             </div>
             <div className="flex flex-wrap h-20 mt-5 p-2">
               <h3 className='w-2/4'>Redeem Bomb</h3>
               <div className='flex flex-wrap justify-end w-2/4'>
-                <button disabled={redeemStatus === ApprovalState.PENDING || redeemStatus === ApprovalState.UNKNOWN} onClick={() => catchError(redeem(), `Unable to redeem BBOND`)} className={`border-2 rounded-full h-10 w-36 pt-1 pb-1 ${approveStatus === ApprovalState.PENDING || approveStatus === ApprovalState.UNKNOWN ? 'border-[#C3C5CBBF] text-[#C3C5CBBF]' : 'border-white text-white'}`}>Redeem&nbsp;&nbsp;&nbsp;<FontAwesomeIcon icon={faArrowCircleDown} /></button>
+                <button disabled={(redeemStatus === ApprovalState.PENDING || redeemStatus === ApprovalState.UNKNOWN) && (!bondStat || bondBalance.eq(0) || !isBondRedeemable)} onClick={() => catchError(redeem(), `Unable to redeem BBOND`)} className={`border-2 rounded-full h-10 w-36 pt-1 pb-1 ${(approveStatus === ApprovalState.PENDING || approveStatus === ApprovalState.UNKNOWN) && (!bondStat || bondBalance.eq(0) || !isBondRedeemable) ? 'border-[#C3C5CBBF] text-[#C3C5CBBF]' : 'border-white text-white'}`}>Redeem&nbsp;&nbsp;&nbsp;<FontAwesomeIcon icon={faArrowCircleDown} /></button>
               </div>
             </div>
           </div>
