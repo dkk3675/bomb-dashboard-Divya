@@ -12,7 +12,7 @@ const TableData = ({ icon,type,currSupply,totalSupply,priceinDollar,priceinBNB }
             <td>{roundAndFormatNumber(currSupply, 2)}</td>
             <td>{roundAndFormatNumber(totalSupply, 2)}</td>
             <td>${priceinDollar ? roundAndFormatNumber(priceinDollar, 2) : '-.--'}<br />{priceinBNB ? priceinBNB : '-.----'} BTCB</td>
-            <td><button onClick={(type) => bombFinance.watchAssetInMetamask(type)}><img src={ MetaMask } alt="" className='h-10 w-10' /></button></td>
+            <td><button onClick={() => bombFinance.watchAssetInMetamask(type)}><img src={ MetaMask } alt="" className='h-10 w-10' /></button></td>
         </tr>
     );
 };

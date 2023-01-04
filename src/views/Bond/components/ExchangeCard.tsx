@@ -99,18 +99,18 @@ const ExchangeCard: React.FC<ExchangeCardProps> = ({
                   {`Approve ${fromTokenName}`}
                 </Button>
               ) : (
-                <Button
-                  className={disabled ? 'shinyButtonDisabled' : 'shinyButton'}
-                  onClick={onPresent}
-                  disabled={disabled}
-                >
-                  {disabledDescription || action}
-                </Button>
-              )}
-              </>
-            ) : (
-              <UnlockWallet />
-            )}
+                 <Button
+                   className={disabled ? 'shinyButtonDisabled' : 'shinyButton'}
+                   onClick={onPresent}
+                   disabled={disabled}
+                 >
+                   {disabledDescription || action}
+                 </Button>
+               )}
+               </>
+             ) : (
+               <UnlockWallet />
+             )}
           </StyledCardActions>
         </StyledCardContentInner>
       </CardContent>
