@@ -5,8 +5,8 @@ import ERC20 from '../bomb-finance/ERC20';
 
 const useAllowance = (token: ERC20, spender: string, pendingApproval?: boolean) => {
   const [allowance, setAllowance] = useState<BigNumber>(null);
-  const { account,status } = useWallet();
-  console.log(account,status);
+  const { account, status } = useWallet();
+  console.log(account, status);
   // console.log(token,spender,pendingApproval)
 
   const fetchAllowance = useCallback(async () => {
