@@ -52,6 +52,10 @@ import WalletProviderModal from '../../components/WalletProviderModal/WalletProv
 
 import { BOND_REDEEM_PRICE_BN } from '../../bomb-finance/constants';
 
+import useEarningsOnBoardroom from '../../hooks/useEarningsOnBoardroom';
+import useHarvestFromBoardroom from '../../hooks/useHarvestFromBoardroom';
+import useClaimRewardCheck from '../../hooks/boardroom/useClaimRewardCheck';
+
 const Dashboard = () => {
   const [isWalletProviderOpen, setWalletProviderOpen] = useState(true);
 
@@ -121,6 +125,10 @@ const Dashboard = () => {
   const [redeemStatus, redeem] = useApprove(bombFinance.BBOND, Treasury.address);
 
   const isBondRedeemable = useMemo(() => cashPrice.gt(BOND_REDEEM_PRICE_BN), [cashPrice]);
+
+  const {onReward} = useHarvestFromBoardroom();
+  const earnings = useEarningsOnBoardroom();
+  const canClaimReward = useClaimRewardCheck();
 
   return (
     <section className='flex flex-wrap flex-col max-w-full h-auto bg-[#373747] items-center p-0 m-0 text-white'>
@@ -216,7 +224,7 @@ const Dashboard = () => {
             </span>
           </div>
           <div className="flex flex-wrap w-[50%] justify-end">
-              <button className='border-2 border-white rounded-full h-10 w-36'>
+              <button onClick={onReward} disabled={earnings.eq(0) || !canClaimReward} className={`border-2 border-white rounded-full h-10 w-36 ${earnings.eq(0) || !canClaimReward ? 'border-[#C3C5CBBF] text-[#C3C5CBBF]' : 'border-white text-white'}`}>
                 <span className='inline-flex'>Claim All&nbsp;<img src={ BShares } alt="" className='h-6 w-6 p-1 bg-gray-700 rounded-full' /></span>
               </button>
           </div>
@@ -260,13 +268,13 @@ const Dashboard = () => {
                 <p>Bomb is over peg</p>
               </span>
               <div className='flex flex-wrap justify-end w-2/4'>
-                <button disabled={(approveStatus === ApprovalState.PENDING || approveStatus === ApprovalState.UNKNOWN) && (!bondStat || isBondRedeemable)} onClick={() => catchError(approve(), `Unable to approve BOMB`)} className={`border-2 rounded-full h-10 w-36 pt-1 pb-1 ${(approveStatus === ApprovalState.PENDING || approveStatus === ApprovalState.UNKNOWN) && (!bondStat || isBondRedeemable) ? 'border-[#C3C5CBBF] text-[#C3C5CBBF]' : 'border-white text-white'}`}>Purchase&nbsp;&nbsp;&nbsp;<FontAwesomeIcon icon={faShoppingCart} /></button>
+                <button disabled={(approveStatus === ApprovalState.PENDING || approveStatus === ApprovalState.UNKNOWN && !bondStat || isBondRedeemable)} onClick={() => catchError(approve(), `Unable to approve BOMB`)} className={`border-2 rounded-full h-10 w-36 pt-1 pb-1 ${(approveStatus === ApprovalState.PENDING || approveStatus === ApprovalState.UNKNOWN && !bondStat || isBondRedeemable) ? 'border-[#C3C5CBBF] text-[#C3C5CBBF]' : 'border-white text-white'}`}>Purchase&nbsp;&nbsp;&nbsp;<FontAwesomeIcon icon={faShoppingCart} /></button>
               </div>
             </div>
             <div className="flex flex-wrap h-20 mt-5 p-2">
               <h3 className='w-2/4'>Redeem Bomb</h3>
               <div className='flex flex-wrap justify-end w-2/4'>
-                <button disabled={(redeemStatus === ApprovalState.PENDING || redeemStatus === ApprovalState.UNKNOWN) && (!bondStat || bondBalance.eq(0) || !isBondRedeemable)} onClick={() => catchError(redeem(), `Unable to redeem BBOND`)} className={`border-2 rounded-full h-10 w-36 pt-1 pb-1 ${(approveStatus === ApprovalState.PENDING || approveStatus === ApprovalState.UNKNOWN) && (!bondStat || bondBalance.eq(0) || !isBondRedeemable) ? 'border-[#C3C5CBBF] text-[#C3C5CBBF]' : 'border-white text-white'}`}>Redeem&nbsp;&nbsp;&nbsp;<FontAwesomeIcon icon={faArrowCircleDown} /></button>
+                <button disabled={(redeemStatus === ApprovalState.PENDING || redeemStatus === ApprovalState.UNKNOWN && !bondStat || bondBalance.eq(0) || !isBondRedeemable)} onClick={() => catchError(redeem(), `Unable to redeem BBOND`)} className={`border-2 rounded-full h-10 w-36 pt-1 pb-1 ${(approveStatus === ApprovalState.PENDING || approveStatus === ApprovalState.UNKNOWN && !bondStat || bondBalance.eq(0) || !isBondRedeemable) ? 'border-[#C3C5CBBF] text-[#C3C5CBBF]' : 'border-white text-white'}`}>Redeem&nbsp;&nbsp;&nbsp;<FontAwesomeIcon icon={faArrowCircleDown} /></button>
               </div>
             </div>
           </div>
