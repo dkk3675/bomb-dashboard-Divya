@@ -326,7 +326,7 @@ const Dashboard = () => {
       </div>
 
       {/* BBONDS */}
-      <div className="flex flex-wrap flex-col h-72 w-3/4 bg m-2 rounded-lg border-2 border-[#728CDF] p-3">
+      <div className="flex flex-wrap flex-col h-[82] w-3/4 bg m-2 rounded-lg border-2 border-[#728CDF] p-3">
         <div className="flex flex-wrap h-30 w-3/4">
           <img src={BBond} alt="" className="h-12 w-12" />
           <span>
@@ -334,7 +334,7 @@ const Dashboard = () => {
             <p>BBOND can be purchased only on contraction periods, when TWAP of BOMB is below 1</p>
           </span>
         </div>
-        <div className="flex flex-wrap flex-row h-40 p-3">
+        <div className="flex flex-wrap flex-row justify-center items-center h-52 p-5">
           <div className="flex flex-wrap w-1/4 items-center justify-center p-3">
             <span>
               <p>Current Price: (Bomb)^2</p>
